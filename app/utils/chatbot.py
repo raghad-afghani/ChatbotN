@@ -20,10 +20,10 @@ def get_context_retriever_chain(vectordb):
     # Load environment variables (gets api keys for the models)
     load_dotenv()
     # Initialize the model, set the retreiver and prompt for the chatbot
-    llm = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0.2, convert_system_message_to_human=True)
+    llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash", temperature=0.2, convert_system_message_to_human=True)
     retriever = vectordb.as_retriever()
     prompt = ChatPromptTemplate.from_messages([
-        ("system", "You are a chatbot. You'll receive a prompt that includes a chat history and retrieved content from the vectorDB based on the user's question. Your task is to respond to the user's question using the information from the vectordb, relying as little as possible on your own knowledge. If for some reason you don't know the answer for the question, or the question cannot be answered because there's no context, ask the user for more details. Do not invent an answer. Answer the questions from this context: {context}"),
+        ("system", "You are a NeoCash customer service chatbot. You MUST follow these rules strictly:\n\n1. ONLY answer questions about NeoCash services: account management, money transfers, E-Sadad bill payments, and app support.\n2. Use ONLY the information provided in the context: {context}\n3. For ANY question that is NOT about NeoCash services OR when there is no relevant context, you MUST respond with EXACTLY this message: 'I can only help with NeoCash services like account management, money transfers, E-Sadad bill payments, and app support. For other questions, please consult appropriate resources. How can I help you with NeoCash today?'\n4. NEVER use your general knowledge or provide information outside of NeoCash services.\n5. NEVER say things like 'I cannot access' or 'I am unable' - always use the exact NeoCash message above.\n\nRemember: If the question is about anything other than NeoCash services (like geography, weather, general knowledge, etc.), respond with the exact NeoCash message."),
         MessagesPlaceholder(variable_name="chat_history"),
         ("human", "{input}")
     ])

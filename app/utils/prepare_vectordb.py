@@ -5,6 +5,9 @@ from langchain_community.vectorstores import Chroma
 from dotenv import load_dotenv
 import os
 
+# Load environment variables at module level
+load_dotenv()
+
 def extract_pdf_text(pdfs):
     """
     Extract text from PDF documents
@@ -48,7 +51,6 @@ def get_vectorstore(pdfs, from_session_state=False):
     Returns:
     - vectordb or None: The created or retrieved vectorstore. Returns None if loading from session state and the database does not exist
     """
-    load_dotenv()
     embedding = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
     if from_session_state and os.path.exists("Vector_DB - Documents"):
         # Retrieve vectorstore from existing one
